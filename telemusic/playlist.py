@@ -1,4 +1,5 @@
 import vlc
+from youtube_dl.utils import DownloadError
 
 from .audio_link_getter import get_best_audio_link
 
@@ -45,18 +46,23 @@ class Playlist:
         if self._paused:
             return True  # there is a file to play but it isn't playing
 
-        if skip or not (self._player.is_playing() or self._player.will_play()):
-            try:
-                next_url = next(self)
-            except StopIteration:
-                self._paused = True  # require hitting play again.
-                self._playing = ''
-                return False  # there's no more files to play
-            self._playing = next_url
-            media = self._vlc_instance.media_new(get_best_audio_link(next_url))
-            media.get_mrl()
-            self._player.set_media(media)
-            self._player.play()
+        while True:
+            if skip or not (self._player.is_playing() or self._player.will_play()):
+                try:
+                    next_url = next(self)
+                except StopIteration:
+                    self._paused = True  # require hitting play again.
+                    self._playing = ''
+                    return False  # there's no more files to play
+                self._playing = next_url
+                try:
+                    media = self._vlc_instance.media_new(get_best_audio_link(next_url))
+                    media.get_mrl()
+                except DownloadError:
+                    continue
+                self._player.set_media(media)
+                self._player.play()
+                break
 
         return True  # there is a file playing
 

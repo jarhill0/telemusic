@@ -1,3 +1,5 @@
+import traceback
+
 from pawt.bots import MappedCommandBot
 
 from .helpers import get_queue, get_listener_name, set_queue, get_listener_id, get_key
@@ -14,6 +16,7 @@ class MusicBot(MappedCommandBot):
         text_command_map['/pause'] = self.pause
         text_command_map['/skip'] = self.skip
         text_command_map['/id'] = self.id
+        text_command_map['/nowplaying'] = self.nowplaying
         super().__init__(token, text_command_map, caption_command_map=None, url=url, session=session)
 
         self._playlist = Playlist(get_queue())
@@ -49,6 +52,13 @@ class MusicBot(MappedCommandBot):
             self._playlist.add(url)
             message.reply.send_message('This video has been added to the queue.')
 
+    def nowplaying(self, message, unused):
+        playing = self._playlist.playing
+        if playing:
+            message.reply.send_message('Now playing: {}'.format(playing))
+        else:
+            message.reply.send_message('Nothing is playing at the moment.')
+
     def is_listener(self, message):
         return message.user == self._LISTENER_ID
 
@@ -67,4 +77,8 @@ class MusicBot(MappedCommandBot):
 
 def run():
     bot = MusicBot(get_key())
-    bot.run(timeout=5)
+    try:
+        bot.run(timeout=5)
+    except Exception:
+        bot.before_exit()
+        traceback.print_exc()
