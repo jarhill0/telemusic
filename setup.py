@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='telemusic',
-      version='0.1.2',
+      version='0.1.3',
       packages=['telemusic'],
       entry_points={
           'console_scripts': [

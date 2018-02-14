@@ -62,9 +62,8 @@ class Playlist:
                     continue
                 self._player.set_media(media)
                 self._player.play()
-            break
 
-        return True  # there is a file playing
+            return True  # there is a file playing
 
     def play(self):
         if self._paused:

@@ -31,33 +31,55 @@ class MusicBot(MappedCommandBot):
 
     @staticmethod
     def id(message, unused):
-        message.chat.send_message('Your ID is {}.'.format(message.user.id))
+        try:
+            message.chat.send_message('Your ID is {}.'.format(message.user.id))
+        except Exception:
+            pass
 
     def start(self, message, unused):
-        message.chat.send_message("Hi, I'm a music queue bot for {}.".format(self._LISTENER_NAME))
+        try:
+            message.chat.send_message("Hi, I'm a music queue bot for {}.".format(self._LISTENER_NAME))
+        except Exception:
+            pass
         self.help(message, unused)
 
     @staticmethod
     def help(message, unused):
-        message.chat.send_message('My commands:\n/help: View this help message\n/add [URL]: Add this youtube URL to '
-                                  "the listener's queue\n\nCommands only the listener can use:\n/play: Play the "
-                                  "music\n/pause: Pause the music\n/skip: Skip to the next track")
+        try:
+            message.chat.send_message(
+                'My commands:\n/help: View this help message\n/add [URL]: Add this youtube URL to '
+                "the listener's queue\n\nCommands only the listener can use:\n/play: Play the "
+                "music\n/pause: Pause the music\n/skip: Skip to the next track")
+        except Exception:
+            pass
 
     def add(self, message, opts):
         opts = opts.partition(' ')[2]
         url = opts.split()[0] if opts else None
         if not url:
-            message.reply.send_message('Please provide a URL.')
+            try:
+                message.chat.send_message('Please provide a URL.')
+            except Exception:
+                pass
         else:
             self._playlist.add(url)
-            message.reply.send_message('This video has been added to the queue.')
+            try:
+                message.reply.send_message('This video has been added to the queue.')
+            except Exception:
+                pass
 
     def nowplaying(self, message, unused):
         playing = self._playlist.playing
         if playing:
-            message.reply.send_message('Now playing: {}'.format(playing))
+            try:
+                message.chat.send_message('Now playing: {}'.format(playing))
+            except Exception:
+                pass
         else:
-            message.reply.send_message('Nothing is playing at the moment.')
+            try:
+                message.chat.send_message('Nothing is playing at the moment.')
+            except Exception:
+                pass
 
     def is_listener(self, message):
         return message.user == self._LISTENER_ID
