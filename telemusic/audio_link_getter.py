@@ -10,7 +10,11 @@ def get_best_audio_link(url):
     for fmt in result['formats']:
 
         if fmt.get('format_note', '') != 'DASH audio': continue
-        if int(fmt['format_id']) > best_id:
+        try:
+            id_num = int(fmt['format_id'])
+        except ValueError:
+            continue
+        if id_num > best_id:
             best_id = int(fmt['format_id'])
             best_url = fmt['url']
 
