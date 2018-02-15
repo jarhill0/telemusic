@@ -56,7 +56,12 @@ class Playlist:
                     return False  # there's no more files to play
                 self._playing = next_url
                 try:
-                    media = self._vlc_instance.media_new(get_best_audio_link(next_url))
+                    best_link = get_best_audio_link(next_url)
+                    if not best_link:
+                        continue
+                    if not best_link.startswith('http'):
+                        continue  # naive protection against accessing local files
+                    media = self._vlc_instance.media_new(best_link)
                     media.get_mrl()
                 except DownloadError:
                     continue
