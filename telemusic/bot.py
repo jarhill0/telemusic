@@ -33,6 +33,10 @@ class MusicBot(MappedCommandBot):
     def id(message, unused):
         try:
             message.chat.send_message('Your ID is {}.'.format(message.user.id))
+        except Exception:
+            pass
+
+        try:
             message.chat.send_message("This chat's ID is {}.".format(message.chat.id))
         except Exception:
             pass
