@@ -35,7 +35,7 @@ def get_key():
 
 
 def get_channel():
-    return _get_data()['channel']
+    return _get_data().get('channel')
 
 
 def set_listener_id(id_):
