@@ -19,7 +19,7 @@ class MusicBot(MappedCommandBot):
         text_command_map['/nowplaying'] = self.nowplaying
         super().__init__(token, text_command_map, caption_command_map=None, url=url, session=session)
 
-        self._playlist = Playlist(get_queue())
+        self._playlist = Playlist(self, queue=get_queue())
         self._LISTENER_NAME = get_listener_name()
         self._LISTENER_ID = get_listener_id()
 
@@ -33,6 +33,7 @@ class MusicBot(MappedCommandBot):
     def id(message, unused):
         try:
             message.chat.send_message('Your ID is {}.'.format(message.user.id))
+            message.chat.send_message("This chat's ID is {}.".format(message.chat.id))
         except Exception:
             pass
 
@@ -68,18 +69,21 @@ class MusicBot(MappedCommandBot):
             except Exception:
                 pass
 
-    def nowplaying(self, message, unused):
+    def nowplaying_helper(self, chat):
         playing = self._playlist.playing
         if playing:
             try:
-                message.chat.send_message('Now playing: {}'.format(playing))
+                chat.send_message('Now playing: {}'.format(playing))
             except Exception:
                 pass
         else:
             try:
-                message.chat.send_message('Nothing is playing at the moment.')
+                chat.send_message('Nothing is playing at the moment.')
             except Exception:
                 pass
+
+    def nowplaying(self, message, unused):
+        self.nowplaying_helper(message.chat)
 
     def is_listener(self, message):
         return message.user == self._LISTENER_ID

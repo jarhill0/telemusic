@@ -2,10 +2,12 @@ import vlc
 from youtube_dl.utils import DownloadError
 
 from .audio_link_getter import get_best_audio_link
+from .helpers import get_channel
 
 
 class Playlist:
-    def __init__(self, queue=None):
+    def __init__(self, bot, queue=None):
+        self._bot = bot
         self._queue = []
         if queue:
             for item in queue:
@@ -66,6 +68,7 @@ class Playlist:
                 except DownloadError:
                     continue
                 self._player.set_media(media)
+                self.message_channel()
                 self._player.play()
 
             return True  # there is a file playing
@@ -84,3 +87,9 @@ class Playlist:
         self._player.stop()
         self._playing = ''
         self.update(skip=True)
+
+    def message_channel(self):
+        channel = get_channel()
+        if channel:
+            chat = self._bot.tg.chat(chat_id=channel)
+            self._bot.nowplaying_helper(chat)

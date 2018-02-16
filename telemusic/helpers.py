@@ -31,7 +31,11 @@ def get_queue():
 
 
 def get_key():
-    return _get_data().get('api_key') or ''
+    return _get_data().get('api_key', '')
+
+
+def get_channel():
+    return _get_data()['channel']
 
 
 def set_listener_id(id_):
@@ -48,3 +52,7 @@ def set_queue(queue):
 
 def set_key(api_key):
     _set_data_val('api_key', api_key)
+
+
+def set_channel(channel):
+    _set_data_val('channel', channel)

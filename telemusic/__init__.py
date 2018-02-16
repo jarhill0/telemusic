@@ -4,7 +4,7 @@ from .bot import run
 def main():
     from sys import argv
 
-    from .helpers import set_listener_name, set_key, set_listener_id
+    from .helpers import set_listener_name, set_key, set_listener_id, set_channel
 
     USAGE = """\nUsage:
     telemusic:      view this help message
@@ -43,6 +43,8 @@ Known values:
                 set_listener_id(value)
             elif name == 'key':
                 set_key(value)
+            elif name == 'channel':
+                set_channel(value)
             else:
                 print('Unknown value name {!r}.'.format(name))
 

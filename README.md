@@ -29,6 +29,12 @@ telemusic set name FirstName
 telemusic set name "Full Name"
 ```
 
+Optionally, set a channel the bot should broadcast to when the track is advanced:
+
+```commandline
+telemusic set channel 123456789
+```
+
 Finally, run the bot again:
 
 ```commandline
