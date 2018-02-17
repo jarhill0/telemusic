@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse, urlunparse, urlencode, parse_qs
 
 from .const import DATA_PATH
 
@@ -56,3 +57,20 @@ def set_key(api_key):
 
 def set_channel(channel):
     _set_data_val('channel', channel)
+
+
+def sanitize(url):
+    parsed = urlparse(url)
+    if not parsed.netloc.lower().endswith('youtube.com'):
+        return url
+    query = parsed.query
+    if not query:
+        return url
+    params = parse_qs(query)
+    vid_id = params.get('v')
+    if not vid_id:
+        return url
+    new_params = urlencode([('v', vid_id)], doseq=True)
+    parsed_copy = list(parsed)
+    parsed_copy[4] = new_params
+    return urlunparse(parsed_copy)

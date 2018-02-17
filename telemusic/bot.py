@@ -2,7 +2,7 @@ import traceback
 
 from pawt.bots import MappedCommandBot
 
-from .helpers import get_queue, get_listener_name, set_queue, get_listener_id, get_key
+from .helpers import get_queue, get_listener_name, set_queue, get_listener_id, get_key, sanitize
 from .playlist import Playlist
 
 
@@ -67,6 +67,7 @@ class MusicBot(MappedCommandBot):
             except Exception:
                 pass
         else:
+            url = sanitize(url)  # to remove stuff like playlists
             self._playlist.add(url)
             try:
                 message.reply.send_message('This video has been added to the queue.')
