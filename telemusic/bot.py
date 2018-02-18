@@ -78,7 +78,7 @@ class MusicBot(MappedCommandBot):
         playing = self._playlist.playing
         if playing:
             try:
-                chat.send_message('Now playing: {}'.format(playing))
+                chat.send_message('Now playing: {}'.format(playing), disable_notification=True)
             except Exception:
                 pass
         else:
